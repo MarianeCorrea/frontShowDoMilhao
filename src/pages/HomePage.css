@@ -1,0 +1,113 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+/* Estilo principal da página */
+.homepage-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; /* Ocupa toda a altura da tela */
+    background: linear-gradient(135deg, #a31300, #1b4794); /* Gradiente */
+    color: #fff; 
+    font-family: 'Poppins', sans-serif; 
+    padding: 20px;
+    text-align: center;
+  }
+  
+  /* Estilo para a imagem */
+  .homepage-image {
+    width: 300px;
+    max-width: 80%; /* Responsivo */
+    margin-bottom: 20px;
+    border-radius: 10px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2); /* Sombra suave */
+  }
+  
+  /* Título principal */
+  .homepage-title {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Sombra no texto */
+  }
+  
+  /* Descrição */
+  .homepage-description {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+    max-width: 600px; 
+    line-height: 1.5;
+    color: #e0e0e0;
+  }
+  
+  /* Botão estilizado */
+  .homepage-button {
+    font-size: 1.2rem;
+    padding: 15px 30px;
+    background: linear-gradient(90deg, #ff7e5f, #feb47b); /* Gradiente no botão */
+    color: #ffffff;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); /* Sombra no botão */
+    transition: all 0.3s ease; /* Animação */
+  }
+  
+  /* Efeito ao passar o mouse no botão */
+  .homepage-button:hover {
+    transform: scale(1.1); /* Botão aumenta*/
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3); /* Sombra */
+    background: linear-gradient(90deg, #feb47b, #ff7e5f); /* Inverte gradiente */
+  }
+  
+/* Observação abaixo do texto principal */
+.homepage-observation {
+    font-size: 0.9rem; 
+    color: #ccc; 
+    margin-top: -10px;
+    font-style: italic; }
+
+  /* Responsividade */
+  @media (max-width: 768px) {
+    .homepage-title {
+      font-size: 2rem;
+    }
+  
+    .homepage-description {
+      font-size: 1rem;
+    }
+  
+    .homepage-button {
+      font-size: 1rem;
+      padding: 10px 20px;
+    }
+  }
+  
+
+  /* Animação do gradiente */
+@keyframes backgroundAnimation {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+  
+  /* Fundo com gradiente animado */
+  .homepage-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background: linear-gradient(135deg, #1b4794, #2a5298, #dd6839, #a31300);
+    background-size: 300% 300%;
+    animation: backgroundAnimation 10s ease infinite;
+    color: #fff;
+    font-family: 'Poppins', sans-serif;
+    padding: 20px;
+    text-align: center;
+  }

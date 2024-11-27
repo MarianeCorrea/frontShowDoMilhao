@@ -1,20 +1,26 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom'; // Hook para redirecionar o usuário
+import { useNavigate } from 'react-router-dom';
+import './HomePage.css';
+import showMilhaoImg from '../assets/show-do-milhao.png';
 
 const HomePage = () => {
-  const navigate = useNavigate(); // Permite redirecionar para outras páginas
+  const navigate = useNavigate();
 
-  // Função chamada ao clicar no botão para começar o jogo
   const startGame = () => {
-    navigate('/question'); // Redireciona para a página de perguntas
+    navigate('/question');
   };
 
   return (
-    <div>
-      <h1>Bem-vindo ao Show do Milhão!</h1>
-      <p>Prepare-se para desafiar seus conhecimentos e ainda ganhar 1 milhão de reais!</p>
-      {/* Botão que inicia o jogo */}
-      <button onClick={startGame}>Começar o Jogo</button>
+    <div className="homepage-container">
+      <img src={showMilhaoImg} alt="Show do Milhão" className="homepage-image" />
+      <h1 className="homepage-title">SHOW DO MILHÃO</h1>
+      <p className="homepage-description">
+        Desafie seus conhecimentos e ganhe até 1 milhão de reais
+      </p>
+      <p className="homepage-observation">
+        *Obs: O valor é de mentira. Nem sonhe.
+      </p>
+      <button onClick={startGame} className="homepage-button">COMEÇAR A JOGAR</button>
     </div>
   );
 };
