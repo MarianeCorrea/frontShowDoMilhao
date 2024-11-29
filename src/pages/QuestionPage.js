@@ -98,21 +98,14 @@ const QuestionPage = () => {
       setSelectedOption(null);
       handleTransition(true);
     } else {
+      setActualScore(score / 2);
       setGameOver(true); // Termina o jogo
     }
   };
 
-  useEffect(() => {
-    if (!gameOver) {
-      return;
-    }
-
-    setActualScore(score / 2);
-  }, [gameOver]);
-
   // Função chamada ao jogador decidir parar o jogo
   const handleStop = () => {
-    alert(`Você parou o jogo com R$ ${score}. Parabéns!`);
+    setActualScore(score);
     setGameOver(true); // Termina o jogo
   };
 
@@ -190,7 +183,7 @@ const QuestionPage = () => {
                   ranking
                     .sort((a, b) => b.score - a.score)
                     .map((item, index) => {
-                      if (index > 5) {
+                      if (index > 4) {
                         return;
                       }
                       return (
@@ -212,7 +205,7 @@ const QuestionPage = () => {
                   ranking
                     .sort((a, b) => b.id - a.id)
                     .map((item, index) => {
-                      if (index > 5) {
+                      if (index > 4) {
                         return;
                       }
                       return (
@@ -231,7 +224,7 @@ const QuestionPage = () => {
           </>
         ) : gameOver ? (
           <>
-            <h1>Você perdeu</h1>
+            <h1>Fim de jogo</h1>
             <p>Seu Score: {actualScore}</p>
             <form onSubmit={(e) => handleNickname(e)}>
               <label htmlFor="nickname">Seu apelido</label>
@@ -266,7 +259,12 @@ const QuestionPage = () => {
               ))}
             </div>
             <div className="actions-container">
-              <button className="action-button stop-button">PARAR</button>
+              <button
+                className="action-button stop-button"
+                onClick={handleStop}
+              >
+                PARAR
+              </button>
               <button
                 className="action-button confirm-button"
                 onClick={handleAnswer}
