@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react"; // Hooks do React para estados e efeitos colaterais
 import axios from "../services/AxiosConfig.js"; // Instância configurada do axios
 import "./QuestionPage.css";
+import { useNavigate } from "react-router-dom";
 
 const QuestionPage = () => {
+  const navigate = useNavigate();
+
   const listTrail = [
     "R$ 1.000,00",
     "R$ 1.000,00",
@@ -29,6 +32,7 @@ const QuestionPage = () => {
   const [options, setOptions] = useState([]); // Armazena as opções de resposta
   // PONTUACAO
   const [score, setScore] = useState(0); // Armazena a pontuação do jogador
+  const [actualScore, setActualScore] = useState(0); // Pontuação final
 
   // NIVEL
   const [level, setLevel] = useState("FACIL");
@@ -43,7 +47,11 @@ const QuestionPage = () => {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [transitionNumber, setTransitionNumber] = useState(3);
 
-  const [error, setError] = useState("");
+  // nickname
+  const [nickname, setNickname] = useState("");
+
+  const [ranking, setRanking] = useState([]);
+  const [timeToShowRanking, setTimeToShowRanking] = useState(false);
 
   // Busca uma pergunta do backend ao carregar a página
   useEffect(() => {
@@ -69,7 +77,6 @@ const QuestionPage = () => {
         }
       })
       .catch((error) => {
-        setError("Erro ao buscar pergunta:", error);
         console.error("Erro ao buscar pergunta:", error);
       });
   };
@@ -88,14 +95,20 @@ const QuestionPage = () => {
       }
 
       setQuestionNumber(questionNumber + 1);
-      alert(`Resposta correta! Você ganhou R$ ${score}`);
       setSelectedOption(null);
       handleTransition(true);
     } else {
-      alert("Resposta errada! Você perdeu tudo.");
       setGameOver(true); // Termina o jogo
     }
   };
+
+  useEffect(() => {
+    if (!gameOver) {
+      return;
+    }
+
+    setActualScore(score / 2);
+  }, [gameOver]);
 
   // Função chamada ao jogador decidir parar o jogo
   const handleStop = () => {
@@ -140,6 +153,21 @@ const QuestionPage = () => {
     setSelectedOption(option); // Atualiza o estado com a opção selecionada
   };
 
+  const handleNickname = (e) => {
+    e.preventDefault();
+
+    axios.post("/ranking", {
+      jogador: nickname,
+      score: actualScore,
+    });
+
+    axios.get("/ranking").then((res) => {
+      setRanking(res.data);
+    });
+
+    setTimeToShowRanking(true);
+  };
+
   return (
     <div className="questionpage-container">
       <div className="questionpage-photo-container">
@@ -153,6 +181,70 @@ const QuestionPage = () => {
           </button>
         ) : isTransitioning ? (
           <h1 className="transition-number">{transitionNumber}</h1>
+        ) : timeToShowRanking ? (
+          <>
+            <div>
+              <h1>Melhores</h1>
+              <ol>
+                {ranking &&
+                  ranking
+                    .sort((a, b) => b.score - a.score)
+                    .map((item, index) => {
+                      if (index > 5) {
+                        return;
+                      }
+                      return (
+                        <li key={item.id}>
+                          {item.jogador} - R${" "}
+                          {new Intl.NumberFormat("pt-BR", {
+                            style: "currency",
+                            currency: "BRL",
+                          }).format(item.score)}
+                        </li>
+                      );
+                    })}
+              </ol>
+            </div>
+            <div>
+              <h1>Mais recentes</h1>
+              <ol>
+                {ranking &&
+                  ranking
+                    .sort((a, b) => b.id - a.id)
+                    .map((item, index) => {
+                      if (index > 5) {
+                        return;
+                      }
+                      return (
+                        <li key={item.id}>
+                          {item.jogador} - R${" "}
+                          {new Intl.NumberFormat("pt-BR", {
+                            style: "currency",
+                            currency: "BRL",
+                          }).format(item.score)}
+                        </li>
+                      );
+                    })}
+              </ol>
+              <button onClick={() => navigate("/")}>Recomeçar</button>
+            </div>
+          </>
+        ) : gameOver ? (
+          <>
+            <h1>Você perdeu</h1>
+            <p>Seu Score: {actualScore}</p>
+            <form onSubmit={(e) => handleNickname(e)}>
+              <label htmlFor="nickname">Seu apelido</label>
+              <input
+                name="nickname"
+                type="text"
+                placeholder="Digite seu apelido"
+                value={nickname}
+                onChange={(e) => setNickname(e.target.value)}
+              />
+              <button type="submit">Enviar</button>
+            </form>
+          </>
         ) : (
           <div className="question-container">
             <h1 className="question-title">{question}</h1>
@@ -177,7 +269,7 @@ const QuestionPage = () => {
               <button className="action-button stop-button">PARAR</button>
               <button
                 className="action-button confirm-button"
-                onClick={() => handleAnswer()}
+                onClick={handleAnswer}
               >
                 CONFIRMAR ALTERNATIVA
               </button>
